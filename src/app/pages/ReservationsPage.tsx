@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CalendarCheck, CreditCard, CheckCircle, PartyPopper, XCircle, ChevronRight, ArrowRight } from "lucide-react";
 import { reservations as initialReservations, type ReservationStatus } from "../data/mockData";
 import { toast } from "sonner";
+import { PayPalCheckoutModal } from "../components/PayPalCheckoutModal";
 
 const statusConfig: Record<ReservationStatus, { color: string; bg: string; icon: React.ElementType }> = {
   Solicitado: { color: "text-amber-700", bg: "bg-amber-50 border-amber-200", icon: CalendarCheck },
@@ -16,6 +17,9 @@ const statusFlow: ReservationStatus[] = ["Solicitado", "Aceptado", "Pagado", "Di
 export function ReservationsPage() {
   const [reservations, setReservations] = useState(initialReservations);
   const [filterStatus, setFilterStatus] = useState<ReservationStatus | "all">("all");
+  const [paypalReservationId, setPaypalReservationId] = useState<string | null>(null);
+
+  const paypalReservation = reservations.find((r) => r.id === paypalReservationId) ?? null;
 
   const filtered = filterStatus === "all" ? reservations : reservations.filter((r) => r.status === filterStatus);
 
@@ -117,11 +121,15 @@ export function ReservationsPage() {
                     <p style={{ fontSize: "0.85rem", fontWeight: 600 }} className="text-amber-800 mb-2">Pasarela de Pago</p>
                     <div className="flex flex-wrap gap-3">
                       <button
-                        onClick={() => advanceStatus(res.id)}
-                        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
-                        style={{ fontSize: "0.8rem" }}
+                        onClick={() => setPaypalReservationId(res.id)}
+                        className="flex items-center gap-2 bg-[#ffc439] hover:bg-[#f5b820] text-[#003087] px-4 py-2 rounded-lg"
+                        style={{ fontSize: "0.85rem", fontWeight: 700, fontStyle: "italic" }}
                       >
-                        <CreditCard className="w-4 h-4" /> Pagar con PayPal
+                        <span>Pagar con</span>
+                        <span className="flex items-center" style={{ letterSpacing: "-0.5px" }}>
+                          <span className="text-[#003087]">Pay</span>
+                          <span className="text-[#009cde]">Pal</span>
+                        </span>
                       </button>
                       <button
                         onClick={() => advanceStatus(res.id)}
@@ -138,6 +146,17 @@ export function ReservationsPage() {
           );
         })}
       </div>
+
+      <PayPalCheckoutModal
+        open={paypalReservation !== null}
+        onClose={() => setPaypalReservationId(null)}
+        onSuccess={() => {
+          if (paypalReservationId) advanceStatus(paypalReservationId);
+          setPaypalReservationId(null);
+        }}
+        amount={paypalReservation?.totalPrice ?? 0}
+        description={paypalReservation ? `Reserva ${paypalReservation.id} · ${paypalReservation.accommodationName}` : ""}
+      />
 
       {filtered.length === 0 && (
         <div className="text-center py-16 text-muted-foreground">

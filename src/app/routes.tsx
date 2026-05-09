@@ -9,6 +9,8 @@ import { OperatorsPage } from "./pages/OperatorsPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { AdminPage } from "./pages/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
+import { AccommodationDetailsPage } from "./pages/AccommodationDetailsPage";
+import { PackageDetailsPage } from "./pages/PackageDetailsPage";
 
 export const router = createBrowserRouter([
   {
@@ -21,7 +23,9 @@ export const router = createBrowserRouter([
     children: [
       { index: true, Component: HomePage },
       { path: "search", Component: SearchPage },
+      { path: "accommodation/:id", Component: AccommodationDetailsPage },
       { path: "packages", Component: PackagesPage },
+      { path: "package/:id", Component: PackageDetailsPage },
       { path: "reservations", Component: ReservationsPage },
       { path: "community", Component: CommunityPage },
       { path: "operators", Component: OperatorsPage },

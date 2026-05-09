@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { Link } from "react-router";
 import { Search, MapPin, Star, Users, Bus, SlidersHorizontal, X } from "lucide-react";
 import { accommodations, accommodationTypes, transportTypes, type AccommodationType, type TransportType } from "../data/mockData";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
@@ -123,10 +124,14 @@ export function SearchPage() {
       <div className="grid md:grid-cols-2 gap-6">
         {filtered.map((acc) => (
           <div key={acc.id} className="bg-white rounded-xl overflow-hidden border border-border shadow-sm hover:shadow-md transition-shadow flex flex-col sm:flex-row">
-            <ImageWithFallback src={acc.image} alt={acc.name} className="w-full sm:w-48 h-48 sm:h-auto object-cover" />
+            <Link to={`/accommodation/${acc.id}`} className="w-full sm:w-48 h-48 sm:h-auto shrink-0">
+              <ImageWithFallback src={acc.image} alt={acc.name} className="w-full h-full object-cover hover:opacity-90 transition-opacity" />
+            </Link>
             <div className="p-4 flex-1 flex flex-col">
               <div className="flex justify-between items-start mb-1">
-                <h3 style={{ fontSize: "1.05rem", fontWeight: 600 }}>{acc.name}</h3>
+                <Link to={`/accommodation/${acc.id}`} className="hover:text-emerald-700 transition-colors">
+                  <h3 style={{ fontSize: "1.05rem", fontWeight: 600 }}>{acc.name}</h3>
+                </Link>
                 <span className="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full shrink-0" style={{ fontSize: "0.7rem", fontWeight: 600 }}>
                   {acc.type}
                 </span>

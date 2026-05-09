@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import { Star, MapPin, Clock } from "lucide-react";
 import { packages } from "../data/mockData";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
@@ -12,15 +13,17 @@ export function PackagesPage() {
       <div className="grid md:grid-cols-2 gap-6">
         {packages.map((pkg) => (
           <div key={pkg.id} className="bg-white rounded-xl overflow-hidden border border-border shadow-sm hover:shadow-md transition-shadow">
-            <div className="relative">
-              <ImageWithFallback src={pkg.image} alt={pkg.name} className="w-full h-52 object-cover" />
+            <Link to={`/package/${pkg.id}`} className="relative block">
+              <ImageWithFallback src={pkg.image} alt={pkg.name} className="w-full h-52 object-cover hover:opacity-90 transition-opacity" />
               <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1">
                 <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
                 <span style={{ fontSize: "0.85rem", fontWeight: 600 }}>{pkg.rating}</span>
               </div>
-            </div>
+            </Link>
             <div className="p-5">
-              <h3 style={{ fontSize: "1.2rem", fontWeight: 700 }} className="mb-1">{pkg.name}</h3>
+              <Link to={`/package/${pkg.id}`} className="hover:text-emerald-700 transition-colors">
+                <h3 style={{ fontSize: "1.2rem", fontWeight: 700 }} className="mb-1">{pkg.name}</h3>
+              </Link>
               <div className="flex items-center gap-4 text-muted-foreground mb-3" style={{ fontSize: "0.85rem" }}>
                 <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {pkg.destination}</span>
                 <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {pkg.duration}</span>

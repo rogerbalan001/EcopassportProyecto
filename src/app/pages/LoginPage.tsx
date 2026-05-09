@@ -2,16 +2,18 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Lock, Mail, User, Eye, EyeOff, LogIn, UserPlus } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "../context/AuthContext";
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [isRegister, setIsRegister] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    userType: "traveler",
+    userType: "traveler" as "traveler" | "operator" | "admin",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -22,16 +24,25 @@ export function LoginPage() {
         toast.error("Completa todos los campos");
         return;
       }
+      login({
+        name: formData.name,
+        email: formData.email,
+        userType: formData.userType,
+      });
       toast.success(`Cuenta creada exitosamente para ${formData.name}`);
     } else {
       if (!formData.email || !formData.password) {
         toast.error("Completa todos los campos");
         return;
       }
+      login({
+        name: formData.name || "Usuario Demo",
+        email: formData.email,
+        userType: "traveler",
+      });
       toast.success("Inicio de sesión exitoso");
     }
 
-    // Simular login exitoso y redirigir
     setTimeout(() => {
       navigate("/");
     }, 1000);
